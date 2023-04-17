@@ -67,13 +67,13 @@ function my_sidebars(){
 add_action('widgets_init','my_sidebars');
 
 function test($message) {
-    $api_key = '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';
-    $api_url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+    $api_key = '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';
+    $api_url = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
 
     $data = array(
         'prompt' => $message,
-        'max_tokens' => 10,
-        'temperature' => 0.5,
+        'max_tokens' => 300,
+        'temperature' => 0.65,
     );
 
     $args = array(
@@ -92,7 +92,7 @@ function test($message) {
 
     $body = wp_remote_retrieve_body( $response );
     $data = json_decode( $body, true );
-    print_r($data);
+    // print_r($data);
     return $data['choices'][0]['text'];
 }
 add_action('test','test');
