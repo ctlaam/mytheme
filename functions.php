@@ -24,6 +24,7 @@ add_action('wp_enqueue_scripts','load_js');
 // theme options
 add_theme_support('menus');
 add_theme_support('post-thumbnails');
+add_theme_support('widgets');
 
 
 
@@ -40,6 +41,61 @@ register_nav_menus(
 add_image_size('blog-large', 800, 400, true);
 add_image_size('blog-small', 300, 150, true);
 
+
+
+//  register sidebar
+
+function my_sidebars(){
+
+    register_sidebar(
+            array(
+                    'name'=> 'Page SideBar',
+                    'id' => 'page-sidebar',
+                    'before-title' => '<h4 class="widgget-title">',
+                    'after-title' =>'</h4>',
+            )
+    );
+    register_sidebar(
+        array(
+                'name'=> 'Blog SideBar',
+                'id' => 'blog-sidebar',
+                'before-title' => '<h4 class="widgget-title">',
+                'after-title' =>'</h4>',
+        )
+    );
+}
+add_action('widgets_init','my_sidebars');
+
+function test($message) {
+    $api_key = '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';
+    $api_url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+
+    $data = array(
+        'prompt' => $message,
+        'max_tokens' => 10,
+        'temperature' => 0.5,
+    );
+
+    $args = array(
+        'headers' => array(
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $api_key,
+        ),
+        'body' => json_encode( $data ),
+    );
+
+    $response = wp_remote_post( $api_url, $args );
+
+    if ( is_wp_error( $response ) ) {
+        return false;
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+    $data = json_decode( $body, true );
+    print_r($data);
+    return $data['choices'][0]['text'];
+}
+add_action('test','test');
 
 ?>
 
